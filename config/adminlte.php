@@ -372,6 +372,16 @@ return [
                 ],
             ],
         ],
+        [
+            'text' => 'Clientes',
+            'icon' => 'fas fa-fw fa-users',
+            'submenu' => [
+                [
+                    'text' => 'Listado de Clientes',
+                    'url' => 'admin/clientes',
+                ],
+            ],
+        ],
         ['header' => 'labels'],
     ],
 
