@@ -102,3 +102,16 @@ Route::delete('/admin/compras/{id}', [App\Http\Controllers\CompraController::cla
 //rutas para tmp_compras
 Route::post('/admin/compras/create/tmp', [App\Http\Controllers\TmpCompraController::class, 'tmp_compra'])->name('admin.compras.tmp_compras')->middleware('auth');
 Route::delete('/admin/compras/create/tmp/{id}', [App\Http\Controllers\TmpCompraController::class, 'destroy'])->name('admin.compras.tmp_compras.destroy')->middleware('auth');
+
+//rutas para Detallecompras
+Route::post('/admin/compras/detalle/create', [App\Http\Controllers\DetalleCompraController::class, 'store'])->name('admin.detalle.compras.store')->middleware('auth');
+Route::delete('/admin/compras/detalle/{id}', [App\Http\Controllers\DetalleCompraController::class, 'destroy'])->name('admin.detalle.compras.destroy')->middleware('auth');
+
+//Rutas para Clientes
+Route::get('/admin/clientes', [App\Http\Controllers\ClientesController::class, 'index'])->name('admin.clientes.index')->middleware('auth');
+Route::get('/admin/clientes/create', [App\Http\Controllers\ClientesController::class, 'create'])->name('admin.clientes.create')->middleware('auth');
+Route::post('/admin/clientes/create', [App\Http\Controllers\ClientesController::class, 'store'])->name('admin.clientes.store')->middleware('auth');
+Route::get('/admin/clientes/{id}', [App\Http\Controllers\ClientesController::class, 'show'])->name('admin.clientes.show')->middleware('auth');
+Route::get('/admin/clientes/{id}/edit', [App\Http\Controllers\ClientesController::class, 'edit'])->name('admin.clientes.edit')->middleware('auth');
+Route::put('/admin/clientes/{id}', [App\Http\Controllers\ClientesController::class, 'update'])->name('admin.clientes.update')->middleware('auth');
+Route::delete('/admin/clientes/{id}', [App\Http\Controllers\ClientesController::class, 'destroy'])->name('admin.clientes.destroy')->middleware('auth');

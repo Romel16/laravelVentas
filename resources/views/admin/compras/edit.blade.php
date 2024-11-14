@@ -8,15 +8,16 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-outline card-primary">
+            <div class="card card-outline card-success">
                 <div class="card-header">
                     <h3 class="card-title">Ingrese los datos</h3>
                 </div>
 
                 <div class="card-body">
-                    <form action="{{url('/admin/compras/'.$compra->id)}}" method="post">
+                    <form action="{{url('/admin/compras/'.$compra->id)}}" id="form_compra" method="post">
                         @csrf
                         @method('PUT')
+                        <input type="text" value="{{$compra->id}}" id="id_compra" name="id_compra" hidden/>
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="row">
@@ -127,7 +128,7 @@
                                                     <td style="text-align: center">{{$detalle->producto->codigo}}</td>
                                                     <td style="text-align: center">{{$detalle->cantidad}}</td>
                                                     <td style="text-align: center">{{$detalle->producto->nombre}}</td>
-                                                    <td style="text-align: center">{{$detalle->precio_compra}}</td>
+                                                    <td style="text-align: center">{{$detalle->producto->precio_compra}}</td>
                                                     <td style="text-align: center">{{$costo = $detalle->cantidad*$detalle->producto->precio_compra}}</td>
                                                     <td style="text-align: center">
                                                         <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{$detalle->id}}"><i class="fas fa-trash"></i></button>
@@ -206,8 +207,8 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" value="{{$detalle->proveedor->empresa}}" id="empresa_proveedor"  disabled>
-                                        <input type="text" class="form-control" id="id_proveedor"  name="id_proveedor" hidden>
+                                        <input type="text" class="form-control" value="{{$compra->proveedor->empresa}}" id="empresa_proveedor"  disabled>
+                                        <input type="text" class="form-control" id="id_proveedor" value="{{$compra->proveedor->id}}"  name="id_proveedor" hidden>
                                     </div>
                                 </div>
                                 <hr>
@@ -281,44 +282,6 @@
             })
         })
 
-        /* $('.delete-btn').click(function(){
-            var id = $(this).data('id');
-            if (id) {
-                $.ajax({
-                    url: "{{url('/admin/compras/create/tmp')}}/"+id,
-                    type: 'POST',
-                    data: {
-                        _token: '{{csrf_token()}}',
-                        _method: 'DELETE'
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            Swal.fire({
-                            position: "top-end",
-                            icon: "success",
-                            title: "Se eliminó el producto",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                        location.reload();
-                        } else {
-                            Swal.fire({
-                                position: "top-end",
-                                icon: "error",
-                                title: "No se pudo eliminar el producto",
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.log(xhr.responseText);  // Muestra el detalle del error en la consola
-                        alert('Ha ocurrido un error: ' + error);
-                    }
-                });
-            }
-        }) */
-
         $('.delete-btn').click(function(){
             var id = $(this).data('id');
 
@@ -337,7 +300,7 @@
                     if (id) {
                         // Si se confirma la eliminación, se ejecuta la solicitud AJAX
                         $.ajax({
-                            url: "{{url('/admin/compras/create/tmp')}}/" + id,
+                            url: "{{url('/admin/compras/detalle')}}/" + id,
                             type: 'POST',
                             data: {
                                 _token: '{{csrf_token()}}',
@@ -374,8 +337,6 @@
         });
 
 
-
-
         $('.seleccionar-btn-proveedor').click(function(){
             var id_proveedor = $(this).data('id');
             var empresa = $(this).data('empresa');
@@ -399,18 +360,24 @@
         $('#codigo').on('keyup', function(event) {
             // Detectar si la tecla presionada es Enter (código 13)
             if (event.which === 13) {
+
                 var codigo = $(this).val();
                 var cantidad = $('#cantidad').val(); // Capturando la cantidad desde el input
+                var id_compra = $('#id_compra').val();
+                var id_proveedor = $('#id_proveedor').val();
+
 
                 // Verifica que el campo de código no esté vacío
                 if (codigo.length > 0) {
                     $.ajax({
-                        url: "{{route('admin.compras.tmp_compras')}}",
+                        url: "{{route('admin.detalle.compras.store')}}",
                         method: 'POST',
                         data: {
                             _token: '{{csrf_token()}}',
                             codigo: codigo,
-                            cantidad: cantidad // Asegúrate de enviar la cantidad aquí
+                            cantidad: cantidad,// Asegúrate de enviar la cantidad aquí
+                            id_compra: id_compra,
+                            id_proveedor: id_proveedor,
                         },
                         success: function(response) {
                             if (response.success) {
@@ -443,6 +410,7 @@
 
     </script>
 
+{{--Scrip de DataTables --}}
     <script>
         $('#miTabla').DataTable({
             language: {
@@ -469,6 +437,7 @@
                     "sSortDescending": ": Activar para ordenar la columna de manera descendente"
                 }
             }
+
         });
         $('#miTabla2').DataTable({
             language: {

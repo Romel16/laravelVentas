@@ -68,6 +68,18 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box zoomP">
+                <a href="{{url('/admin/compras')}}" class="info-box-icon bg-dark">
+                    <span ><i class="fas fa-fw fa-shopping-cart"></i></span>
+                </a>
+                <div class="info-box-content">
+                    <span class="info-box-text">Compras</span>
+                    <span class="info-box-number">{{$total_compras}} compras</span>
+                </div>
+            </div>
+        </div>
     </div>
     </div>
 @stop

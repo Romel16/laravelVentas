@@ -280,44 +280,6 @@
             })
         })
 
-        /* $('.delete-btn').click(function(){
-            var id = $(this).data('id');
-            if (id) {
-                $.ajax({
-                    url: "{{url('/admin/compras/create/tmp')}}/"+id,
-                    type: 'POST',
-                    data: {
-                        _token: '{{csrf_token()}}',
-                        _method: 'DELETE'
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            Swal.fire({
-                            position: "top-end",
-                            icon: "success",
-                            title: "Se eliminó el producto",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                        location.reload();
-                        } else {
-                            Swal.fire({
-                                position: "top-end",
-                                icon: "error",
-                                title: "No se pudo eliminar el producto",
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.log(xhr.responseText);  // Muestra el detalle del error en la consola
-                        alert('Ha ocurrido un error: ' + error);
-                    }
-                });
-            }
-        }) */
-
         $('.delete-btn').click(function(){
             var id = $(this).data('id');
 

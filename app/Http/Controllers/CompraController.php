@@ -9,6 +9,7 @@ use App\Models\Proveedor;
 use App\Models\TmpCompra;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CompraController extends Controller
 {
@@ -17,7 +18,7 @@ class CompraController extends Controller
      */
     public function index()
     {
-        $compras = Compra::with('detalles')->get();
+        $compras = Compra::with('detalles','proveedor')->get();
         return view('admin.compras.index', compact('compras'));
     }
 
@@ -58,6 +59,7 @@ class CompraController extends Controller
         $compra->fecha = $request->fecha;
         $compra->comprobante = $request->comprobante;
         $compra->precio_total = $request->precio_total;
+        $compra->proveedor_id = $request->id_proveedor;
         $compra->empresa_id = Auth::user()->empresa_id;
 
         $compra->save();
@@ -69,10 +71,8 @@ class CompraController extends Controller
 
             $detalle_compra = new DetalleCompra();
             $detalle_compra->cantidad = $tmp_compra->cantidad;
-            $detalle_compra->precio_compra = $producto->precio_compra;
             $detalle_compra->compra_id = $compra->id;
             $detalle_compra->producto_id = $producto->id;
-            $detalle_compra->proveedor_id = $request->id_proveedor;
             $detalle_compra->save();
 
             $producto->stock += $tmp_compra->cantidad;
@@ -112,16 +112,117 @@ class CompraController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Compra $compra)
+    public function update(Request $request,$id)
     {
-        //
+        /* $datos = request()->all();
+        return response()->json($datos);  */
+
+       /*  $request->validate([
+            'fecha'=>'required',
+            'comprobante'=>'required',
+            'precio_total'=>'required',
+        ]);
+
+        $compra = Compra::find($id);
+
+        $compra->fecha = $request->fecha;
+        $compra->comprobante = $request->comprobante;
+        $compra->precio_total = $request->precio_total;
+        $compra->proveedor_id = $request->id_proveedor;
+        $compra->empresa_id = Auth::user()->empresa_id;
+
+        foreach ($compra->detalles as $detalle) {
+            $producto = Producto::find($detalle->producto_id);
+            $producto->stock -= $detalle->cantidad;
+            $producto->save();
+        }
+
+        $compra->save();
+
+        return redirect()->route('admin.compras.index')
+        ->with('mensaje','se actualizó la compra de la manera correcta')
+        ->with('icono', 'success'); */
+
+
+            // Validación de los campos
+        $request->validate([
+            'fecha' => 'required',
+            'comprobante' => 'required',
+            'precio_total' => 'required',
+        ]);
+
+        // Buscar la compra
+        $compra = Compra::find($id);
+
+        if (!$compra) {
+            return redirect()->route('admin.compras.index')
+                ->with('mensaje', 'Compra no encontrada')
+                ->with('icono', 'error');
+        }
+
+        // Iniciar transacción
+        DB::beginTransaction();
+        try {
+            // Actualizar la compra
+            $compra->fecha = $request->fecha;
+            $compra->comprobante = $request->comprobante;
+            $compra->precio_total = $request->precio_total;
+            $compra->proveedor_id = $request->id_proveedor;
+            $compra->empresa_id = Auth::user()->empresa_id;
+
+            // Actualizar los productos relacionados
+            foreach ($compra->detalles as $detalle) {
+                $producto = Producto::find($detalle->producto_id);
+
+                if ($producto) {
+                    $producto->stock += $detalle->cantidad;
+
+                    // Verificar que el stock no sea negativo
+                    if ($producto->stock < 0) {
+                        throw new \Exception('El stock no puede ser negativo para el producto ID: ' . $producto->id);
+                    }
+
+                    $producto->save();
+                }
+            }
+
+            // Guardar la compra actualizada
+            $compra->save();
+
+            // Confirmar la transacción
+            DB::commit();
+
+            return redirect()->route('admin.compras.index')
+                ->with('mensaje', 'Se actualizó la compra de manera correcta')
+                ->with('icono', 'success');
+
+        } catch (\Exception $e) {
+            // Revertir cambios si hay algún error
+            DB::rollBack();
+            return redirect()->route('admin.compras.index')
+                ->with('mensaje', 'Error al actualizar la compra: ' . $e->getMessage())
+                ->with('icono', 'error');
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Compra $compra)
+    public function destroy($id)
     {
-        //
+        $compra = Compra::find($id);
+
+        // Resta la cantidad del stock que se desea eliminar
+        foreach ($compra->detalles as $detalle) {
+            $producto = Producto::find($detalle->producto_id);
+            $producto->stock -= $detalle->cantidad;
+            $producto->save();
+        }
+
+        $compra->detalles()->delete();
+        Compra::destroy($id);
+        return redirect()->route('admin.compras.index')
+        ->with('mensaje','se elimino la compra de la manera correcta')
+        ->with('icono', 'success');
     }
 }
