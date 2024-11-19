@@ -382,6 +382,16 @@ return [
                 ],
             ],
         ],
+        [
+            'text' => 'Ventas',
+            'icon' => 'fas fa-fw fa-shopping-cart',
+            'submenu' => [
+                [
+                    'text' => 'Listado de Ventas',
+                    'url' => 'admin/ventas',
+                ],
+            ],
+        ],
         ['header' => 'labels'],
     ],
 
@@ -466,16 +476,6 @@ return [
                 ],
             ],
         ],
-        'Chartjs' => [
-            'active' => false,
-            'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
-                ],
-            ],
-        ],
         'Sweetalert2' => [
             'active' => true,
             'files' => [
@@ -488,6 +488,16 @@ return [
                     'type' => 'css',
                     'asset' => true,
                     'location' => 'https://cdn.jsdelivr.net/npm/sweetalert2@11.14.3/dist/sweetalert2.min.css',
+                ],
+            ],
+        ],
+        'Chartjs' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
                 ],
             ],
         ],
