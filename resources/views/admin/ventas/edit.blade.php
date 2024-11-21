@@ -1,21 +1,22 @@
 @extends('adminlte::page')
 
 @section('content_header')
-    <h1><b>Ventas / Registro de Ventas</b></h1>
+    <h1><b>Ventas / Modificacion de Ventas</b></h1>
     <hr>
 @stop
 
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-outline card-primary">
+            <div class="card card-outline card-success">
                 <div class="card-header">
                     <h3 class="card-title">Ingrese los datos</h3>
                 </div>
 
                 <div class="card-body">
-                    <form action="{{url('/admin/ventas/create')}}" id="form_ventas" method="post">
+                    <form action="{{url('/admin/ventas/create',$venta->id)}}" id="form_ventas" method="post">
                         @csrf
+                        @method('PUT')
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="row">
@@ -120,20 +121,20 @@
                                         </thead>
                                         <tbody>
                                             <?php $count = 1; $total_cantidad = 0; $total_venta=0?>
-                                            @foreach($tmp_ventas as $tmp_venta)
+                                            @foreach($venta->detallesVenta as $detalle)
                                                 <tr>
                                                     <td style="text-align: center">{{$count++}}</td>
-                                                    <td style="text-align: center">{{$tmp_venta->producto->codigo}}</td>
-                                                    <td style="text-align: center">{{$tmp_venta->cantidad}}</td>
-                                                    <td style="text-align: center">{{$tmp_venta->producto->nombre}}</td>
-                                                    <td style="text-align: center">{{$tmp_venta->producto->precio_venta}}</td>
-                                                    <td style="text-align: center">{{$costo = $tmp_venta->cantidad*$tmp_venta->producto->precio_venta}}</td>
+                                                    <td style="text-align: center">{{$detalle->producto->codigo}}</td>
+                                                    <td style="text-align: center">{{$detalle->cantidad}}</td>
+                                                    <td style="text-align: center">{{$detalle->producto->nombre}}</td>
+                                                    <td style="text-align: center">{{$detalle->producto->precio_venta}}</td>
+                                                    <td style="text-align: center">{{$costo = $detalle->cantidad*$detalle->producto->precio_venta}}</td>
                                                     <td style="text-align: center">
-                                                        <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{$tmp_venta->id}}"><i class="fas fa-trash"></i></button>
+                                                        <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{$detalle->id}}"><i class="fas fa-trash"></i></button>
                                                     </td>
                                                 </tr>
                                                 @php
-                                                    $total_cantidad += $tmp_venta->cantidad;
+                                                    $total_cantidad += $detalle->cantidad;
                                                     $total_venta += $costo;
                                                 @endphp
                                             @endforeach
@@ -276,12 +277,12 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="">Nombre del Cliente</label>
-                                        <input type="text" class="form-control" id="nombrecliente" value="s/n" disabled>
+                                        <input type="text" class="form-control" id="nombrecliente" value="{{$venta->cliente->nombre_cliente ?? 's/n'}}" >
                                         <input type="text" class="form-control" id="id_clientes" name="id_clientes" hidden>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="">Nit Codigo</label>
-                                        <input type="text" class="form-control" id="nitcodigo" value="0" disabled>
+                                        <input type="text" class="form-control" id="nitcodigo" value="{{$venta->cliente->nit_codigo ?? '0'}}" >
                                     </div>
                                 </div>
                                 <hr>
@@ -289,7 +290,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="fecha">Fecha de Venta<b>*</b></label>
-                                            <input type="date" class="form-control" value="{{old('fecha', date('Y-m-d'))}}" name="fecha">
+                                            <input type="date" class="form-control" value="{{old('fecha', $venta->fecha)}}" name="fecha">
                                             @error('fecha')
                                             <small style="color: red;">{{$message}}</small>
                                             @enderror
@@ -312,7 +313,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="fas fa-save"> Registrar Compra</i>
+                                            <button type="submit" class="btn btn-success btn-lg btn-save"><i class="fas fa-save"> Actualizar Venta</i>
                                             </button>
                                         </div>
                                     </div>
@@ -464,16 +465,18 @@
             if (event.which === 13) {
                 var codigo = $(this).val();
                 var cantidad = $('#cantidad').val(); // Capturando la cantidad desde el input
+                var id_venta = {{$venta->id}}
 
                 // Verifica que el campo de código no esté vacío
                 if (codigo.length > 0) {
                     $.ajax({
-                        url: "{{route('admin.ventas.tmp_ventas')}}",
+                        url: "{{route('admin.detalle.ventas.store')}}",
                         method: 'POST',
                         data: {
                             _token: '{{csrf_token()}}',
                             codigo: codigo,
-                            cantidad: cantidad // Asegúrate de enviar la cantidad aquí
+                            cantidad: cantidad, // Asegúrate de enviar la cantidad aquí
+                            id_venta: id_venta
                         },
                         success: function(response) {
                             if (response.success) {
