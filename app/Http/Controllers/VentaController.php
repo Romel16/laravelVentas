@@ -127,8 +127,32 @@ class VentaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $datos = request()->all();
-        return response()->json($datos);
+        /* $datos = request()->all();
+        return response()->json($datos); */
+
+        $request->validate([
+            'fecha'=>'required',
+            'precio_total'=>'required',
+        ]);
+
+        $venta = Venta::find($id);
+
+        $venta->fecha = $request->fecha;
+        $venta->precio_total = $request->precio_total;
+        $venta->cliente_id = $request->id_clientes;
+        $venta->empresa_id = Auth::user()->empresa_id;
+
+        foreach ($venta->detallesVenta as $detalle) {
+            $producto = Producto::find($detalle->producto_id);
+            $producto->stock -= $detalle->cantidad;
+            $producto->save();
+        }
+
+        $venta->save();
+
+        return redirect()->route('admin.ventas.index')
+        ->with('mensaje','se actualizó la venta de la manera correcta')
+        ->with('icono', 'success');
     }
 
     /**

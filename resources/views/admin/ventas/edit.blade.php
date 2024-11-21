@@ -14,7 +14,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form action="{{url('/admin/ventas/create',$venta->id)}}" id="form_ventas" method="post">
+                    <form action="{{url('/admin/ventas',$venta->id)}}" id="form_ventas" method="post">
                         @csrf
                         @method('PUT')
                         <div class="row">
@@ -278,7 +278,7 @@
                                     <div class="col-md-6">
                                         <label for="">Nombre del Cliente</label>
                                         <input type="text" class="form-control" id="nombrecliente" value="{{$venta->cliente->nombre_cliente ?? 's/n'}}" >
-                                        <input type="text" class="form-control" id="id_clientes" name="id_clientes" hidden>
+                                        <input type="text" class="form-control" id="id_clientes" name="id_clientes" value="{{$venta->cliente->id ?? '0'}}" hidden >
                                     </div>
                                     <div class="col-md-6">
                                         <label for="">Nit Codigo</label>
@@ -399,7 +399,7 @@
                     if (id) {
                         // Si se confirma la eliminación, se ejecuta la solicitud AJAX
                         $.ajax({
-                            url: "{{url('/admin/ventas/create/tmp')}}/" + id,
+                            url: "{{url('/admin/ventas/detalle')}}/" + id,
                             type: 'POST',
                             data: {
                                 _token: '{{csrf_token()}}',

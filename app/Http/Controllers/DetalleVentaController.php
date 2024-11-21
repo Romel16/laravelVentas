@@ -42,6 +42,8 @@ class DetalleVentaController extends Controller
             if ($detalle_venta_existe) {
                 $detalle_venta_existe->cantidad += $request->cantidad;
                 $detalle_venta_existe->save();
+                $producto->stock -= $request->cantidad;
+                $producto->save();
 
                 return response()->json(['success'=>true, 'message'=>'Producto encontrado']);
             }else{
@@ -51,7 +53,7 @@ class DetalleVentaController extends Controller
                 $detalle_venta->cantidad = $request->cantidad;
                 $detalle_venta->compra_id = $id_venta;
                 $detalle_venta->producto_id = $producto->id;
-
+                $producto->stock -= $request->cantidad;
                 $detalle_venta->save();
 
                 return response()->json(['success'=>true, 'message'=>'Producto encontrado']);
@@ -91,6 +93,11 @@ class DetalleVentaController extends Controller
      */
     public function destroy($id)
     {
+        $detalleVenta = DetalleVenta::find($id);
+        $producto = Producto::find();
+
+        $producto->stock += $detalleVenta->cantidad;
+        $producto->save();
         DetalleVenta::destroy($id);
         return response()->json(['success'=>true]);
     }

@@ -52,6 +52,8 @@ class DetalleCompraController extends Controller
                 $detalle_compra->compra_id = $id_compra;
                 $detalle_compra->producto_id = $producto->id;
 
+
+                $producto->stock += $request->cantidad;
                 $detalle_compra->save();
 
                 return response()->json(['success'=>true, 'message'=>'Producto encontrado']);
@@ -91,6 +93,11 @@ class DetalleCompraController extends Controller
      */
     public function destroy($id)
     {
+        $detalleCompra = DetalleCompra::find($id);
+        $producto = Producto::find();
+
+        $producto->stock -= $detalleCompra->cantidad;
+        $producto->save();
         DetalleCompra::destroy($id);
         return response()->json(['success'=>true]);
     }
