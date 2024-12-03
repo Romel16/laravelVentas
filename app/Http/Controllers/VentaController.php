@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use App\Models\DetalleVenta;
+use App\Models\Empresa;
 use App\Models\Producto;
 use App\Models\TmpVenta;
 use App\Models\Venta;
+use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -102,6 +104,15 @@ class VentaController extends Controller
         ->with('icono', 'success');
     }
 
+
+
+    public function pdf($id){
+        $id_empresa = Auth::user()->empresa_id;
+        $empresa = Empresa::where('id',$id_empresa)->first();
+        $venta = Venta::with('cliente', 'detallesVenta')->findOrFail($id);
+        $pdf = Pdf::loadView('admin.ventas.pdf', compact('empresa','venta'));
+        return $pdf->stream();
+    }
     /**
      * Display the specified resource.
      */

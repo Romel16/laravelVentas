@@ -45,6 +45,7 @@
                                     <div class="btn-group" usuario="group" aria-label="Basic example">
                                         <a href="{{url('/admin/ventas', $venta->id)}}" type="button" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
                                         <a href="{{url('/admin/ventas/'.$venta->id.'/edit')}}" type="button" class="btn btn-success btn-sm"><i class="fas fa-pencil"></i></a>
+                                        <a href="{{url('/admin/ventas/pdf/'.$venta->id)}}" type="button" class="btn btn-warning btn-sm"><i class="fas fa-print"></i></a>
                                         <form action="{{url('/admin/ventas',$venta->id)}}" method="POST" onclick="preguntar{{$venta->id}}(event)" id='miFormulario{{$venta->id}}'>
                                             @csrf
                                             @method('delete')
