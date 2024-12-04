@@ -34,6 +34,63 @@
 
     </table>
 
+    <br>
+    <?php
+        $fecha_db = $venta->fecha;
+
+        //convertir la fecha al formtato deseado
+        $fecha_formateada = date('d', strtotime($fecha_db)) . " de " .
+                            date('F', strtotime($fecha_db)) . " del " .
+                            date('Y', strtotime($fecha_db));
+
+        $meses = [
+            'January' =>'Enero',
+            'February' =>'Febrero',
+            'March' =>'Marzo',
+            'April' =>'Abril',
+            'May' =>'Mayo',
+            'June' =>'Junio',
+            'July' =>'Julio',
+            'August' =>'Agosto',
+            'September' =>'Septiembre',
+            'October' =>'Octubre',
+            'November' =>'Noviembre',
+            'December' =>'Diciembre',
+        ];
+
+        $fecha_formateada = str_replace(array_keys($meses), array_values($meses), $fecha_formateada);
+
+
+
+    ?>
+
+    <div style="border: 1px solid #000">
+      <table cellpadding="6">
+        <tr>
+          <td width="300px"><b>Fecha: </b>{{$fecha_formateada}}</b></td>
+          <td width="200px"></td>
+          <td><b>Nit/CI: </b>{{$venta->cliente->nit_codigo}}</td>
+        </tr>
+        <tr>
+          <td><b>Señor(es): </b>{{$venta->cliente->nombre_cliente}}</td>
+        </tr>
+      </table>
+    </div>
+
+
+    <Table border="1">
+        <tr>
+            <td width="30px" style="background-color: #ccccc; text-align: center"><b>Nro</b"></td>
+            <td width="150px" style="background-color: #ccccc; text-align: center"><b>Productos</b"></td>
+            <td width="190px" style="background-color: #ccccc; text-align: center"><b>Descripcion</b"></td>
+            <td width="90px" style="background-color: #ccccc; text-align: center"><b>Cantidad</b"></td>
+            <td width="110px" style="background-color: #ccccc; text-align: center"><b>Precio Unitario</b"></td>
+            <td width="90px" style="background-color: #ccccc; text-align: center"><b>SubTotal</b"></td>
+        </tr>
+    </Table>
+
+
+
     <!-- Optional JavaScript; choose one of the two! -->
 
     <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
