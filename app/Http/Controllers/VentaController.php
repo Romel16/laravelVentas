@@ -12,6 +12,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Nnjeim\World\Models\Currency;
+use NumberToWords\NumberToWords;
+use NumberFormatter;
 
 class VentaController extends Controller
 {
@@ -106,13 +109,39 @@ class VentaController extends Controller
 
 
 
-    public function pdf($id){
+    public function pdf($id)
+    {
+        function numeroALetrasConDecimales($numero)
+        {
+            $formatter = new NumberFormatter("es", NumberFormatter::SPELLOUT);
+
+            //Dividir el numero en parte entera y decimal
+            $partes = explode('.', number_format($numero, 2, '.', ''));
+
+            $entero = $formatter->format($partes[0]);
+            $decimal = $formatter->format($partes[1]);
+
+            return ucfirst("$entero con $decimal/100 soles");
+        }
+
+        // Obtener datos de la empresa autenticada
         $id_empresa = Auth::user()->empresa_id;
-        $empresa = Empresa::where('id',$id_empresa)->first();
+        $empresa = Empresa::where('id', $id_empresa)->first();
+        $moneda = Currency::find($empresa->moneda);
+
+        // Obtener datos de la venta
         $venta = Venta::with('cliente', 'detallesVenta')->findOrFail($id);
-        $pdf = Pdf::loadView('admin.ventas.pdf', compact('empresa','venta'));
+
+        // Convertir el monto total a palabras
+        $numero = $venta->precio_total;
+        $literal = numeroALetrasConDecimales($numero);
+
+        // Generar PDF
+        $pdf = Pdf::loadView('admin.ventas.pdf', compact('empresa', 'venta', 'moneda', 'literal'));
         return $pdf->stream();
     }
+
+
     /**
      * Display the specified resource.
      */
@@ -150,7 +179,7 @@ class VentaController extends Controller
 
         $venta->fecha = $request->fecha;
         $venta->precio_total = $request->precio_total;
-        $venta->cliente_id = $request->id_clientes;
+        $venta->cliente_id = $request->id_clientes?:0; // Usar cliente por defecto si no se proporciona uno válido;
         $venta->empresa_id = Auth::user()->empresa_id;
 
         foreach ($venta->detallesVenta as $detalle) {

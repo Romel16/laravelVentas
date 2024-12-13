@@ -51,7 +51,7 @@ class DetalleVentaController extends Controller
                 $detalle_venta = new DetalleVenta();
 
                 $detalle_venta->cantidad = $request->cantidad;
-                $detalle_venta->compra_id = $id_venta;
+                $detalle_venta->venta_id = $id_venta;
                 $detalle_venta->producto_id = $producto->id;
                 $producto->stock -= $request->cantidad;
                 $detalle_venta->save();

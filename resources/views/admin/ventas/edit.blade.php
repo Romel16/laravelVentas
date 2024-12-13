@@ -129,13 +129,17 @@
                                                     <td style="text-align: center">{{$detalle->producto->nombre}}</td>
                                                     <td style="text-align: center">{{$detalle->producto->precio_venta}}</td>
                                                     <td style="text-align: center">{{$costo = $detalle->cantidad*$detalle->producto->precio_venta}}</td>
-                                                    <td style="text-align: center">
+                                                    <td style="text-align: ">
                                                         <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{$detalle->id}}"><i class="fas fa-trash"></i></button>
                                                     </td>
                                                 </tr>
                                                 @php
                                                     $total_cantidad += $detalle->cantidad;
                                                     $total_venta += $costo;
+
+                                                    // Formatear valores
+                                                    $costo_formateado = number_format($costo, 2, '.', '');
+                                                    $total_venta_formateado = number_format($total_venta, 2, '.', '');
                                                 @endphp
                                             @endforeach
                                         </tbody>
@@ -143,8 +147,8 @@
                                             <tr>
                                                 <td colspan="2" style="text-align: right"><b>Cantidad Total</b></td>
                                                 <td style="text-align: center"><b>{{$total_cantidad}}</b></td>
-                                                <td colspan="2" style="text-align: right"><b>Total Compra</b></td>
-                                                <td style="text-align: center"><b>{{$total_venta}}</b></td>
+                                                <td colspan="2" style="text-align: right"><b>Total Venta</b></td>
+                                                <td style="text-align: center"><b>{{$total_venta_formateado }}</b></td>
                                             </tr>
                                         </tfooter>
                                     </table>
@@ -302,7 +306,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="precio_total">Precio Total<b>*</b></label>
-                                            <input type="text" style="text-align: center;background-color: #cccc" class="form-control" value="{{$total_venta}}" name="precio_total">
+                                            <input type="text" style="text-align: center;background-color: #cccc" class="form-control" value="{{$total_venta_formateado }}" name="precio_total">
                                             @error('precio_total')
                                             <small style="color: red;">{{$message}}</small>
                                             @enderror
@@ -311,6 +315,11 @@
                                 </div>
                                 <hr>
                                 <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <a href="{{url('/admin/ventas')}}" class= "btn btn-secondary btn-lg"><i class="fa-solid fa-circle-xmark"> Atras</i></a>
+                                        </div>
+                                    </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <button type="submit" class="btn btn-success btn-lg btn-save"><i class="fas fa-save"> Actualizar Venta</i>

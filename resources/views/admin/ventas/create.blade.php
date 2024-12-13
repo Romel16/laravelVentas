@@ -142,8 +142,8 @@
                                             <tr>
                                                 <td colspan="2" style="text-align: right"><b>Cantidad Total</b></td>
                                                 <td style="text-align: center"><b>{{$total_cantidad}}</b></td>
-                                                <td colspan="2" style="text-align: right"><b>Total Compra</b></td>
-                                                <td style="text-align: center"><b>{{$total_venta}}</b></td>
+                                                <td colspan="2" style="text-align: right"><b>Total Venta</b></td>
+                                                <td style="text-align: center"><b>{{number_format($total_venta, 2, '.', '')}}</b></td>
                                             </tr>
                                         </tfooter>
                                     </table>
@@ -312,7 +312,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="fas fa-save"> Registrar Compra</i>
+                                            <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="fas fa-save"> Registrar Venta</i>
                                             </button>
                                         </div>
                                     </div>
