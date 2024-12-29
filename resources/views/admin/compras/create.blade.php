@@ -143,7 +143,7 @@
                                                 <td colspan="2" style="text-align: right"><b>Cantidad Total</b></td>
                                                 <td style="text-align: center"><b>{{$total_cantidad}}</b></td>
                                                 <td colspan="2" style="text-align: right"><b>Total Compra</b></td>
-                                                <td style="text-align: center"><b>{{$total_compra}}</b></td>
+                                                <td style="text-align: center"><b>{{number_format($total_compra, 2, '.', '')}}</b></td>
                                             </tr>
                                         </tfooter>
                                     </table>
@@ -236,7 +236,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="precio_total">Precio Total<b>*</b></label>
-                                            <input type="text" style="text-align: center;background-color: #cccc" class="form-control" value="{{$total_compra}}" name="precio_total">
+                                            <input type="text" style="text-align: center;background-color: #cccc" class="form-control" value="{{number_format($total_compra, 2, '.', '')}}" name="precio_total">
                                             @error('precio_total')
                                             <small style="color: red;">{{$message}}</small>
                                             @enderror

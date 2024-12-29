@@ -384,11 +384,21 @@ return [
         ],
         [
             'text' => 'Ventas',
-            'icon' => 'fas fa-fw fa-shopping-cart',
+            'icon' => 'fas fa-fw fa-money-bill',
             'submenu' => [
                 [
                     'text' => 'Listado de Ventas',
                     'url' => 'admin/ventas',
+                ],
+            ],
+        ],
+        [
+            'text' => 'Arqueo',
+            'icon' => 'fas fa-fw fa-cash-register',
+            'submenu' => [
+                [
+                    'text' => 'Listado de Arqueos',
+                    'url' => 'admin/arqueos',
                 ],
             ],
         ],
