@@ -14,7 +14,9 @@
                 <div class="card-header">
                     <h3 class="card-title">Clientes Registrados</h3>
                     <div class="card-tools">
-                        <a href="{{url('/admin/clientes/create')}}" class="btn btn-primary"><ifa fa-plus> Crear nuevo</ifa></a>
+                        <a href="{{url('/admin/clientes/reporte')}}" target="_blank" class="btn btn-danger"><i class="fa fa-file-pdf"> Crear nuevo</i></a>
+                        
+                        <a href="{{url('/admin/clientes/create')}}" class="btn btn-primary"><i class="fa fa-plus"> Crear nuevo</i></a>
                     </div>
                 </div>
                 <div class="card-body">

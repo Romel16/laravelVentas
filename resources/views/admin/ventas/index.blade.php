@@ -14,6 +14,8 @@
                 <div class="card-header">
                     <h3 class="card-title">Ventas Registrados</h3>
                     <div class="card-tools">
+                        <a href="{{url('/admin/ventas/reporte')}}" target="_blank" class="btn btn-danger"><i class="fa fa-file-pdf"> Crear nuevo</i></a>
+
                          @if($arqueoAbierto)
                             <a href="{{url('/admin/ventas/create')}}" class="btn btn-primary"><i class="fa fa-plus"></i> Crear nuevo</a>
                         @else

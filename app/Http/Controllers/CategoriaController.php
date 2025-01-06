@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
+use App\Models\Empresa;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -105,5 +107,12 @@ class CategoriaController extends Controller
         return redirect()->route('admin.categorias.index')
         ->with('mensaje','se elimino la categoria de la manera correcta')
         ->with('icono', 'success');
+    }
+
+    public function reporte(){
+        $empresa = Empresa::where('id', Auth::user()->empresa_id)->first();
+        $categorias = Categoria::all();
+        $pdf = PDF::loadView('admin.categorias.reportes', compact('categorias','empresa'));
+        return $pdf->stream();
     }
 }

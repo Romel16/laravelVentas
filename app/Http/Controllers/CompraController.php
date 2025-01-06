@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Arqueo;
 use App\Models\Compra;
 use App\Models\DetalleCompra;
+use App\Models\Empresa;
 use App\Models\MovimientoCaja;
 use App\Models\Producto;
 use App\Models\Proveedor;
 use App\Models\TmpCompra;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -237,5 +239,12 @@ class CompraController extends Controller
         return redirect()->route('admin.compras.index')
         ->with('mensaje','se elimino la compra de la manera correcta')
         ->with('icono', 'success');
+    }
+
+    public function reporte(){
+        $empresa = Empresa::where('id', Auth::user()->empresa_id)->first();
+        $compras = Compra::all();
+        $pdf = PDF::loadView('admin.compras.reportes', compact('compras','empresa'));
+        return $pdf->stream();
     }
 }

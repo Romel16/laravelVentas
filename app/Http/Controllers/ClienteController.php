@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\Empresa;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 
 class ClienteController extends Controller
@@ -110,5 +112,19 @@ class ClienteController extends Controller
         return redirect()->route('admin.clientes.index')
         ->with('mensaje','se elimino el proveedor de la manera correcta')
         ->with('icono', 'success');
+    }
+
+/*************  ✨ Codeium Command ⭐  *************/
+    /**
+     * Genera un reporte de compras en formato PDF
+     *
+     * @return \Illuminate\Http\Response
+     */
+/******  72f4e4f4-aa40-4837-a4cc-65fbd4f9097e  *******/
+    public function reporte(){
+        $empresa = Empresa::where('id', Auth::user()->empresa_id)->first();
+        $clientes = Cliente::all();
+        $pdf = PDF::loadView('admin.clientes.reportes', compact('clientes','empresa'));
+        return $pdf->stream();
     }
 }

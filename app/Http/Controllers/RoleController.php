@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Empresa;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
@@ -99,5 +102,12 @@ class RoleController extends Controller
         return redirect()->route('admin.roles.index')
         ->with('mensaje','se elimino el rol de la manera correcta')
         ->with('icono', 'success');
+    }
+
+    public function reporte(){
+        $empresa = Empresa::where('id', Auth::user()->empresa_id)->first();
+        $roles = Role::all();
+        $pdf = PDF::loadView('admin.roles.reportes', compact('roles','empresa'));
+        return $pdf->stream();
     }
 }

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
+use App\Models\Empresa;
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -147,5 +149,12 @@ class ProductoController extends Controller
         return redirect()->route('admin.productos.index')
         ->with('mensaje','se elimino el producto de la manera correcta')
         ->with('icono', 'success');
+    }
+
+    public function reporte(){
+        $empresa = Empresa::where('id', Auth::user()->empresa_id)->first();
+        $productos = Producto::all();
+        $pdf = PDF::loadView('admin.productos.reportes', compact('productos','empresa'));
+        return $pdf->stream();
     }
 }
