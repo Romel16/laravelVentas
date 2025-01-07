@@ -323,6 +323,16 @@ return [
             ],
         ],
         [
+            'text' => 'Permisos',
+            'icon' => 'fas fa-fw fa-user-lock',
+            'submenu' => [
+                [
+                    'text' => 'Listado Permisos',
+                    'url' => 'admin/permisos',
+                ],
+            ],
+        ],
+        [
             'text' => 'Usuarios',
             'icon' => 'fas fa-fw fa-users',
             'submenu' => [

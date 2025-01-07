@@ -39,6 +39,7 @@
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <a href="{{url('/admin/roles', $role->id)}}" type="button" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
                                         <a href="{{url('/admin/roles/'.$role->id.'/edit')}}" type="button" class="btn btn-success btn-sm"><i class="fas fa-pencil"></i></a>
+                                        <a href="{{url('/admin/roles/'.$role->id.'/asignar')}}" type="button" class="btn btn-warning btn-sm"><i class="fas fa-check"></i></a>
                                         <form action="{{url('/admin/roles',$role->id)}}" method="POST" onclick="preguntar{{$role->id}}(event)" id='miFormulario{{$role->id}}'>
                                             @csrf
                                             @method('delete')
