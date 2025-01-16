@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class EmpresaController extends Controller
 {
@@ -87,7 +89,6 @@ class EmpresaController extends Controller
         $empresa->departamento = $request->departamento;
         $empresa->codigo_postal = $request->codigo_postal;
         $empresa->logo = $request->file('logo')->store('logos', 'public');
-
         $empresa->save();
 
         $usuario = new User();
@@ -95,10 +96,19 @@ class EmpresaController extends Controller
         $usuario->email = $request->correo;
         $usuario->password = Hash::make($request['nit']);
         $usuario->empresa_id = $empresa->id;
-
         $usuario->save();
 
-        $usuario->assignRole('ADMINISTRADOR');
+
+        $rol = new Role();
+        $rol->name = 'ADMINISTRADOR';
+        $rol->empresa_id = $empresa->id;
+        $rol->save();
+
+        $usuario->assignRole($rol->id);
+
+        $role = Role::find($rol->id);
+        $todos_los_permisos = Permission::pluck('id')->toArray();
+        $role->permissions()->sync($todos_los_permisos);
 
         Auth::login($usuario);
 
