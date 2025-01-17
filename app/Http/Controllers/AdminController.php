@@ -17,16 +17,17 @@ use Spatie\Permission\Models\Role;
 class AdminController extends Controller
 {
     public function index(){
-        $total_roles = Role::count();
-        $total_usuarios = User::count();
-        $total_categorias = Categoria::count();
-        $total_productos = Producto::count();
-        $total_proveedores = Proveedor::count();
-        $total_compras = Compra::count();
-        $total_clientes = Cliente::count();
-        $total_arqueos = Arqueo::count();
         /*Condicional if: si esta autenticado ? gingresar : si no enviarme al formulario de login*/
         $empresa_id = Auth::check() ? Auth::user()->empresa_id : redirect()->route('login')->send();
+
+        $total_roles = Role::where('empresa_id',$empresa_id)->count();
+        $total_usuarios = User::where('empresa_id',$empresa_id)->count();
+        $total_categorias = Categoria::where('empresa_id',$empresa_id)->count();
+        $total_productos = Producto::where('empresa_id',$empresa_id)->count();
+        $total_proveedores = Proveedor::where('empresa_id',$empresa_id)->count();
+        $total_compras = Compra::where('empresa_id',$empresa_id)->count();
+        $total_clientes = Cliente::where('empresa_id',$empresa_id)->count();
+        $total_arqueos = Arqueo::where('empresa_id',$empresa_id)->count();
 
         $empresa = Empresa::where('id',$empresa_id)->first();
         return view('admin.index',

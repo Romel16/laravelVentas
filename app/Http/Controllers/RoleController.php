@@ -30,7 +30,7 @@ class RoleController extends Controller
 
     public function index()
     {
-        $roles = Role::all();
+        $roles = Role::where('empresa_id', Auth::user()->empresa_id)->get();
         return view('admin.roles.index', compact('roles'));
     }
 
@@ -58,6 +58,7 @@ class RoleController extends Controller
 
         $rol->name = $request->name;
         $rol->guard_name = 'web';
+        $rol->empresa_id = Auth::user()->empresa_id;
 
         $rol->save();
 
@@ -92,10 +93,6 @@ class RoleController extends Controller
         /* $datos = request()->all();
         return response()->json($datos); */
 
-        $request->validate([
-            'name'=>'required|unique:roles,name,'.$id,
-        ]);
-
         $rol = Role::find($id);
 
         $rol->name = $request->name;
@@ -121,7 +118,7 @@ class RoleController extends Controller
 
     public function reporte(){
         $empresa = Empresa::where('id', Auth::user()->empresa_id)->first();
-        $roles = Role::all();
+        $roles = Role::where('empresa_id', Auth::user()->empresa_id)->get();
         $pdf = PDF::loadView('admin.roles.reportes', compact('roles','empresa'));
         return $pdf->stream();
     }

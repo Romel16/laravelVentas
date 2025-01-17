@@ -14,6 +14,19 @@ class CategoriaController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        //Si el usuario esta autenticado, obtener la empresa y compartirla en la vista
+        $this->middleware(function ($request, $next) {
+            if (Auth::check()) {
+                //Obtener la empresa segun el id de la empresa del usuario autenticas
+                $empresa = Empresa::find(Auth::user()->empresa_id)->first();
+                //compartir la variable 'empresa' con todas las vistas
+                view()->share('empresa', $empresa);
+            }
+            return $next($request);
+        });
+    }
     public function index()
     {
         $categorias = Categoria::all();
