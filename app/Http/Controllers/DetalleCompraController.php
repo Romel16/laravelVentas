@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\detalleCompra;
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DetalleCompraController extends Controller
 {
@@ -29,7 +30,7 @@ class DetalleCompraController extends Controller
      */
     public function store(Request $request)
     {
-        $producto = Producto::where('codigo', $request->codigo)->first();
+        $producto = Producto::where('codigo', $request->codigo)->where('empresa_id', Auth::user()->empresa_id)->first();
         $id_compra = $request->id_compra;
 
         if ($producto) {

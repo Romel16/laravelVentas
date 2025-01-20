@@ -41,7 +41,7 @@ class UsuarioController extends Controller
      */
     public function create()
     {
-        $roles = Role::all();
+        $roles = Role::where('empresa_id', Auth::user()->empresa_id)->get();
         return view('admin.usuarios.create', compact('roles'));
     }
 
@@ -91,8 +91,8 @@ class UsuarioController extends Controller
      */
     public function edit($id)
     {
-        $usuario = User::find($id);
-        $roles = Role::all();
+        $usuario = User::where('id', $id)->first();
+        $roles = Role::where('empresa_id', Auth::user()->empresa_id)->get();
         return view('admin.usuarios.edit', compact('usuario','roles'));
     }
 
@@ -144,7 +144,7 @@ class UsuarioController extends Controller
 
     public function reporte(){
         $empresa = Empresa::where('id', Auth::user()->empresa_id)->first();
-        $usuarios = User::all();
+        $usuarios = User::where('empresa_id', Auth::user()->empresa_id)->get();
         $pdf = PDF::loadView('admin.usuarios.reportes', compact('usuarios','empresa'));
         return $pdf->stream();
     }

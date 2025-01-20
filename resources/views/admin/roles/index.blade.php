@@ -37,33 +37,38 @@
                                 <td style="text-align: center">
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <a href="{{url('/admin/roles', $role->id)}}" type="button" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-                                        <a href="{{url('/admin/roles/'.$role->id.'/edit')}}" type="button" class="btn btn-success btn-sm"><i class="fas fa-pencil"></i></a>
+                                        @if ($role->name !== 'ADMINISTRADOR')
+                                            <a href="{{url('/admin/roles/'.$role->id.'/edit')}}" type="button" class="btn btn-success btn-sm"><i class="fas fa-pencil"></i></a>
+
+                                        @endif
                                         <a href="{{url('/admin/roles/'.$role->id.'/asignar')}}" type="button" class="btn btn-warning btn-sm"><i class="fas fa-check"></i></a>
-                                        <form action="{{url('/admin/roles',$role->id)}}" method="POST" onclick="preguntar{{$role->id}}(event)" id='miFormulario{{$role->id}}'>
-                                            @csrf
-                                            @method('delete')
-                                            <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                                        </form>
-                                        <script>
-                                            function preguntar{{$role->id}} (event) {
-                                                event.preventDefault() ;
-                                                Swal.fire({
-                                                    title: '¿Desea eliminar esta registro?',
-                                                    text: '',
-                                                    icon: 'question',
-                                                    showDenyButton: true,
-                                                    confirmButtonText: 'Eliminar',
-                                                    confirmButtonColor: '#a5161d' ,
-                                                    denyButtonColor: '#270a0a',
-                                                    denyButtonText: 'Cancelar',
-                                                }).then ((result) => {
-                                                    if(result.isConfirmed) {
-                                                        var form = $('#miFormulario{{$role->id}}');
-                                                        form.submit ();
-                                                    }
-                                                });
-                                            }
-                                        </script>
+                                        @if ($role->name !== 'ADMINISTRADOR')
+                                            <form action="{{url('/admin/roles',$role->id)}}" method="POST" onclick="preguntar{{$role->id}}(event)" id='miFormulario{{$role->id}}'>
+                                                @csrf
+                                                @method('delete')
+                                                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                            </form>
+                                            <script>
+                                                function preguntar{{$role->id}} (event) {
+                                                    event.preventDefault() ;
+                                                    Swal.fire({
+                                                        title: '¿Desea eliminar esta registro?',
+                                                        text: '',
+                                                        icon: 'question',
+                                                        showDenyButton: true,
+                                                        confirmButtonText: 'Eliminar',
+                                                        confirmButtonColor: '#a5161d' ,
+                                                        denyButtonColor: '#270a0a',
+                                                        denyButtonText: 'Cancelar',
+                                                    }).then ((result) => {
+                                                        if(result.isConfirmed) {
+                                                            var form = $('#miFormulario{{$role->id}}');
+                                                            form.submit ();
+                                                        }
+                                                    });
+                                                }
+                                            </script>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

@@ -29,7 +29,7 @@ class ClienteController extends Controller
     }
     public function index()
     {
-        $clientes = Cliente::all();
+        $clientes = Cliente::where('empresa_id', Auth::user()->empresa_id)->get();
         return view('admin.clientes.index', compact('clientes'));
     }
 
@@ -126,17 +126,14 @@ class ClienteController extends Controller
         ->with('mensaje','se elimino el proveedor de la manera correcta')
         ->with('icono', 'success');
     }
-
-/*************  ✨ Codeium Command ⭐  *************/
     /**
      * Genera un reporte de compras en formato PDF
      *
      * @return \Illuminate\Http\Response
      */
-/******  72f4e4f4-aa40-4837-a4cc-65fbd4f9097e  *******/
     public function reporte(){
         $empresa = Empresa::where('id', Auth::user()->empresa_id)->first();
-        $clientes = Cliente::all();
+        $clientes = Cliente::where('empresa_id', Auth::user()->empresa_id)->get();
         $pdf = PDF::loadView('admin.clientes.reportes', compact('clientes','empresa'));
         return $pdf->stream();
     }

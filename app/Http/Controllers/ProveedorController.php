@@ -28,7 +28,7 @@ class ProveedorController extends Controller
     }
     public function index()
     {
-        $proveedores = Proveedor::all();
+        $proveedores = Proveedor::where('empresa_id', Auth::user()->empresa_id)->get();
         $empresa = Empresa::where('id', Auth::user()->empresa_id)->first();
         return view('admin.proveedor.index', compact('proveedores', 'empresa'));
     }
@@ -38,7 +38,7 @@ class ProveedorController extends Controller
      */
     public function create()
     {
-        $proveedores = Proveedor::all();
+        $proveedores = Proveedor::where('empresa_id', Auth::user()->empresa_id)->get();
         return view('admin.proveedor.create', compact('proveedores'));
     }
 
@@ -140,7 +140,7 @@ class ProveedorController extends Controller
         ->with('icono', 'success');
     }
     public function reporte(){
-        $empresa = Empresa::where('id', Auth::user()->empresa_id)->first();
+        $empresa = Empresa::where('id', Auth::user()->empresa_id)->first()->where('empresa_id', Auth::user()->empresa_id)->get();
         $proveedores = Proveedor::all();
         $pdf = PDF::loadView('admin.proveedor.reportes', compact('proveedores','empresa'))
             ->setPaper('letter', 'landscape');

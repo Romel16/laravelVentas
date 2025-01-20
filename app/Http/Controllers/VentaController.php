@@ -38,8 +38,10 @@ class VentaController extends Controller
     }
     public function index()
     {
-        $arqueoAbierto = Arqueo::whereNull('fecha_cierre')->first();
-        $ventas = Venta::with('detallesVenta','cliente')->get();
+        $arqueoAbierto = Arqueo::whereNull('fecha_cierre')
+            ->where('empresa_id', Auth::user()->empresa_id)
+            ->first();
+        $ventas = Venta::with('detallesVenta','cliente')->where('empresa_id', Auth::user()->empresa_id)->get();
         return view('admin.ventas.index', compact('ventas', 'arqueoAbierto'));
     }
 
@@ -102,7 +104,7 @@ class VentaController extends Controller
         $venta->save();
 
         //REGISTRO EN EL ARQUEO
-        $arqueo_id = Arqueo::whereNull('fecha_cierre')->first();
+        $arqueo_id = Arqueo::whereNull('fecha_cierre')->where('empresa_id', Auth::user()->empresa_id)->first();
         /* dd($arqueo_id);  */// Muestra el resultado de la consulta
         $movimiento = new MovimientoCaja();
         $movimiento->tipo = "INGRESO";
@@ -183,8 +185,8 @@ class VentaController extends Controller
      */
     public function edit($id)
     {
-        $productos = Producto::all();
-        $clientes = Cliente::all();
+        $productos = Producto::where('empresa_id', Auth::user()->empresa_id)->get();
+        $clientes = Cliente::where('empresa_id', Auth::user()->empresa_id)->get();
         $venta = Venta::with('cliente', 'detallesVenta')->findOrFail($id);
         return view('admin.ventas.edit', compact('venta', 'productos','clientes'));
     }
@@ -245,7 +247,7 @@ class VentaController extends Controller
 
     public function reporte(){
         $empresa = Empresa::where('id', Auth::user()->empresa_id)->first();
-        $ventas = Venta::with('cliente')->get();
+        $ventas = Venta::with('cliente')->where('empresa_id', Auth::user()->empresa_id)->get();
         $pdf = PDF::loadView('admin.ventas.reportes', compact('ventas','empresa'));
         return $pdf->stream();
     }

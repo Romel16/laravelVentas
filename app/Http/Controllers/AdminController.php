@@ -10,6 +10,7 @@ use App\Models\Empresa;
 use App\Models\Producto;
 use App\Models\Proveedor;
 use App\Models\User;
+use App\Models\Venta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
@@ -28,6 +29,8 @@ class AdminController extends Controller
         $total_compras = Compra::where('empresa_id',$empresa_id)->count();
         $total_clientes = Cliente::where('empresa_id',$empresa_id)->count();
         $total_arqueos = Arqueo::where('empresa_id',$empresa_id)->count();
+        $ventas = Venta::where('empresa_id',$empresa_id)->get();
+        $compras = Compra::where('empresa_id',$empresa_id)->get();
 
         $empresa = Empresa::where('id',$empresa_id)->first();
         return view('admin.index',
@@ -39,7 +42,9 @@ class AdminController extends Controller
         'total_proveedores',
         'total_compras',
         'total_clientes',
-        'total_arqueos'
+        'total_arqueos',
+        'ventas',
+        'compras'
 
         ));
     }

@@ -31,7 +31,7 @@ class ProductoController extends Controller
     public function index()
     {
 
-        $productos = Producto::with('categoria')->get();
+        $productos = Producto::with('categoria')->where('empresa_id', Auth::user()->empresa_id)->get();
         return view('admin.productos.index', compact('productos'));
     }
 
@@ -40,7 +40,7 @@ class ProductoController extends Controller
      */
     public function create()
     {
-        $categorias = Categoria::all();
+        $categorias = Categoria::where('empresa_id', Auth::user()->empresa_id)->get();
         return view('admin.productos.create', compact('categorias'));
     }
 
@@ -166,7 +166,7 @@ class ProductoController extends Controller
 
     public function reporte(){
         $empresa = Empresa::where('id', Auth::user()->empresa_id)->first();
-        $productos = Producto::all();
+        $productos = Producto::where('empresa_id', Auth::user()->empresa_id)->get();
         $pdf = PDF::loadView('admin.productos.reportes', compact('productos','empresa'));
         return $pdf->stream();
     }

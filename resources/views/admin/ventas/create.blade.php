@@ -480,7 +480,7 @@
                                 Swal.fire({
                                     position: "top-end",
                                     icon: "success",
-                                    title: "Se registro el producto",
+                                    title: response.message,
                                     showConfirmButton: false,
                                     timer: 1500
                                 });
@@ -489,7 +489,7 @@
                                 Swal.fire({
                                     position: "top-end",
                                     icon: "error",
-                                    title: "No se registro el producto",
+                                    title: response.message,
                                     showConfirmButton: false,
                                     timer: 1500
                                 });
@@ -497,7 +497,7 @@
                         },
                         error: function(xhr, status, error) {
                             console.log(xhr.responseText);  // Muestra el detalle del error en la consola
-                            alert('Ha ocurrido un error: ' + error);
+                            alert(response.message + error);
                         }
                     });
                 }

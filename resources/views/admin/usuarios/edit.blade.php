@@ -32,7 +32,13 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="name">Nombre del Usuario</label>
-                                    <input type="text" class="form-control" value="{{$usuario->name}}" name="name" required>
+                                    @if ($usuario->name === 'Admin')
+                                        <input type="text" class="form-control" value="{{$usuario->name}}" name="name" disabled>
+                                        <input type="text" class="form-control" value="{{$usuario->name}}" name="name" hidden>
+                                    @else
+                                        <input type="text" class="form-control" value="{{$usuario->name}}" name="name" required>
+
+                                    @endif
                                     @error('name')
                                     <small style="color: red;">{{$message}}</small>
                                     @enderror

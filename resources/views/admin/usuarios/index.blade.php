@@ -42,32 +42,35 @@
                                 <td style="text-align: center">
                                     <div class="btn-group" usuario="group" aria-label="Basic example">
                                         <a href="{{url('/admin/usuarios', $usuario->id)}}" type="button" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-                                        <a href="{{url('/admin/usuarios/'.$usuario->id.'/edit')}}" type="button" class="btn btn-success btn-sm"><i class="fas fa-pencil"></i></a>
-                                        <form action="{{url('/admin/usuarios',$usuario->id)}}" method="POST" onclick="preguntar{{$usuario->id}}(event)" id='miFormulario{{$usuario->id}}'>
-                                            @csrf
-                                            @method('delete')
-                                            <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                                        </form>
-                                        <script>
-                                            function preguntar{{$usuario->id}} (event) {
-                                                event.preventDefault() ;
-                                                Swal.fire({
-                                                    title: '¿Desea eliminar esta registro?',
-                                                    text: '',
-                                                    icon: 'question',
-                                                    showDenyButton: true,
-                                                    confirmButtonText: 'Eliminar',
-                                                    confirmButtonColor: '#a5161d' ,
-                                                    denyButtonColor: '#270a0a',
-                                                    denyButtonText: 'Cancelar',
-                                                }).then ((result) => {
-                                                    if(result.isConfirmed) {
-                                                        var form = $('#miFormulario{{$usuario->id}}');
-                                                        form.submit ();
-                                                    }
-                                                });
-                                            }
-                                        </script>
+                                        @if ($usuario->name !== 'Admin')
+                                            <a href="{{url('/admin/usuarios/'.$usuario->id.'/edit')}}" type="button" class="btn btn-success btn-sm"><i class="fas fa-pencil"></i></a>
+
+                                            <form action="{{url('/admin/usuarios',$usuario->id)}}" method="POST" onclick="preguntar{{$usuario->id}}(event)" id='miFormulario{{$usuario->id}}'>
+                                                @csrf
+                                                @method('delete')
+                                                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                            </form>
+                                            <script>
+                                                function preguntar{{$usuario->id}} (event) {
+                                                    event.preventDefault() ;
+                                                    Swal.fire({
+                                                        title: '¿Desea eliminar esta registro?',
+                                                        text: '',
+                                                        icon: 'question',
+                                                        showDenyButton: true,
+                                                        confirmButtonText: 'Eliminar',
+                                                        confirmButtonColor: '#a5161d' ,
+                                                        denyButtonColor: '#270a0a',
+                                                        denyButtonText: 'Cancelar',
+                                                    }).then ((result) => {
+                                                        if(result.isConfirmed) {
+                                                            var form = $('#miFormulario{{$usuario->id}}');
+                                                            form.submit ();
+                                                        }
+                                                    });
+                                                }
+                                            </script>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

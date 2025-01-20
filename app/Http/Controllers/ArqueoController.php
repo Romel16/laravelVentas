@@ -29,8 +29,11 @@ class ArqueoController extends Controller
     }
     public function index()
     {
-        $arqueoAbierto = Arqueo::whereNull('fecha_cierre')->first();
-        $arqueos = Arqueo::with('movimientos')->get();
+        $arqueoAbierto = Arqueo::whereNull('fecha_cierre')
+            ->where('empresa_id', Auth::user()->empresa_id)->first();
+        $arqueos = Arqueo::with('movimientos')
+            ->where('empresa_id', Auth::user()->empresa_id)
+            ->get();
         foreach ($arqueos as $arqueo) {
             $arqueo->total_ingresos = $arqueo->movimientos->where('tipo','INGRESO')->sum('monto');
             $arqueo->total_egresos = $arqueo->movimientos->where('tipo','EGRESO')->sum('monto');
@@ -178,8 +181,13 @@ class ArqueoController extends Controller
     }
 
     public function reporte(){
-        $empresa = Empresa::where('id', Auth::user()->empresa_id)->first();
-        $arqueos = Arqueo::with('movimientos')->get();
+        $empresa = Empresa::where('id', Auth::user()->empresa_id)
+            ->where('empresa_id', Auth::user()->empresa_id)->get()
+            ->first();
+
+        $arqueos = Arqueo::with('movimientos')
+            ->where('empresa_id', Auth::user()->empresa_id)
+            ->get();
         foreach ($arqueos as $arqueo) {
             $arqueo->total_ingresos = $arqueo->movimientos->where('tipo','INGRESO')->sum('monto');
             $arqueo->total_egresos = $arqueo->movimientos->where('tipo','EGRESO')->sum('monto');
